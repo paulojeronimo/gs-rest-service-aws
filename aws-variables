@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+f=${1:-access-key.json}
+[ -r "$f" ] || exit 1
+
+export ACCESS_KEY_ID=$(jq .AccessKey.AccessKeyId "$f" | tr -d '"')
+export SECRET_ACCESS_KEY=$(jq .AccessKey.SecretAccessKey "$f" | tr -d '"')

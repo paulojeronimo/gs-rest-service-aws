@@ -1,5 +1,73 @@
-= Scripts to create an AWS machine that runs gs-rest-service
+= Scripts to create an AWS EC2 instance that runs gs-rest-service
 Paulo Jerônimo <paulojeronimo@gmail.com>; {localdatetime}
 :icons: font
 :toc:
 :numbered:
+
+== Creation
+
+Create some files do some initial configurations with the following command:
+
+----
+./create
+----
+
+After this command you will have the script `aws-variables` created.
+Source it before using any of the following vagrant commands.
+
+----
+source aws-variables
+----
+
+Execute the following command to start vagrant provision and wait for this process finishes.
+
+----
+vagrant up
+----
+
+== Information
+
+----
+./aws-ip-address
+./aws-dns-name
+----
+
+== Access
+
+Using vagrant:
+
+----
+vagrant ssh
+----
+
+Using ssh:
+
+----
+ssh -i vagrant.pem ubuntu@$(./aws-ip-address)
+----
+
+== Removal
+
+Use vagrant to destroy the vm:
+
+----
+vagrant destroy
+----
+
+Wait until machine is destroyed (check the status using the following command):
+
+----
+vagrant status
+----
+
+Remove the dummy box:
+
+----
+vagrant box remove aws-dummy
+----
+
+Remove configurations maded in aws and the local generated files:
+
+----
+./remove
+----
