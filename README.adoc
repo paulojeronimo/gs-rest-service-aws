@@ -1,0 +1,5 @@
+= Scripts to create an AWS machine that runs gs-rest-service
+Paulo Jerônimo <paulojeronimo@gmail.com>; {localdatetime}
+:icons: font
+:toc:
+:numbered:

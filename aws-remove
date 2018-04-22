@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -x
+set -e
+
+BASE_DIR=`cd "$(dirname "$0")"; pwd`
+cd "$BASE_DIR"
+
+source ./aws-variables
+
+vagrant destroy
+vagrant box remove aws-dummy || true
+
+secs=10
+echo "Waiting $secs seconds before delete things in aws ..."
+sleep $secs
+
+aws ec2 delete-security-group --group-name vagrant
+aws ec2 delete-key-pair --key-name vagrant
+aws iam detach-user-policy --user-name vagrant --policy-arn 'arn:aws:iam::aws:policy/AmazonEC2FullAccess'
+aws iam delete-access-key --user-name vagrant --access-key-id $ACCESS_KEY_ID
+aws iam delete-user --user-name vagrant
+
+rm -rf .vagrant Vagrantfile provision aws-variables access-key.json vagrant.pem

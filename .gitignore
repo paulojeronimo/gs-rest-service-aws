@@ -1,0 +1,7 @@
+/.vagrant
+/Vagrantfile
+/provision
+/README.html
+/access-key.json
+/aws-variables
+/vagrant.pem
