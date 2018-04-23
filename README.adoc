@@ -6,14 +6,13 @@ Paulo Jerônimo <paulojeronimo@gmail.com>; {localdatetime}
 
 == Creation
 
-Create some files do some initial configurations with the following command:
+Create some files and do initial configurations with the following command:
 
 ----
 ./create
 ----
 
-After this command you will have the script `aws-variables` created.
-Source it before using any of the following vagrant commands.
+Source link:aws-variables[] before using any of the following vagrant commands.
 
 ----
 source aws-variables
