@@ -12,4 +12,4 @@ aws iam detach-user-policy --user-name vagrant --policy-arn 'arn:aws:iam::aws:po
 aws iam delete-access-key --user-name vagrant --access-key-id $ACCESS_KEY_ID
 aws iam delete-user --user-name vagrant
 
-rm -rf .vagrant access-key.json vagrant.pem
+rm -rf .vagrant access-key.json vagrant.pem *.log
