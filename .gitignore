@@ -1,5 +1,5 @@
 /.vagrant
-/README.html
+/*.html
 /access-key.json
 /vagrant.pem
 /*.log

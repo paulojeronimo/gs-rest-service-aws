@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+cd "`dirname "${BASH_SOURCE[0]}"`"
 f=${1:-access-key.json}
-[ -r "$f" ] || exit 1
+[ -r "$f" ] || { echo "File $PWD/\"$f\" could not be read!"; return 1; }
+cd "$OLDPWD"
 
-export ACCESS_KEY_ID=$(jq .AccessKey.AccessKeyId "$f" | tr -d '"')
-export SECRET_ACCESS_KEY=$(jq .AccessKey.SecretAccessKey "$f" | tr -d '"')
+export ACCESS_KEY_ID=$(jq -r .AccessKey.AccessKeyId "$f")
+export SECRET_ACCESS_KEY=$(jq -r .AccessKey.SecretAccessKey "$f")

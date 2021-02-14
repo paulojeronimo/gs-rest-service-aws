@@ -1,0 +1,139 @@
+= Problems and Solutions
+:nofooter:
+:sectanchors:
+:toc:
+
+== Problem 2 - "InvalidParameterValue => Value () for parameter groupId is invalid"
+
+----
+$ vagrant up
+Bringing machine 'gs-rest-service' up with 'aws' provider...
+==> gs-rest-service: Warning! The AWS provider doesn't support any of the Vagrant
+==> gs-rest-service: high-level network configurations (`config.vm.network`). They
+==> gs-rest-service: will be silently ignored.
+==> gs-rest-service: Launching an instance with the following settings...
+==> gs-rest-service:  -- Type: t2.micro
+==> gs-rest-service:  -- AMI: ami-7c412f13
+==> gs-rest-service:  -- Region: eu-central-1
+==> gs-rest-service:  -- Keypair: vagrant
+==> gs-rest-service:  -- Security Groups: ["vagrant"]
+==> gs-rest-service:  -- Block Device Mapping: []
+==> gs-rest-service:  -- Terminate On Shutdown: false
+==> gs-rest-service:  -- Monitoring: false
+==> gs-rest-service:  -- EBS optimized: false
+==> gs-rest-service:  -- Source Destination check:
+==> gs-rest-service:  -- Assigning a public IP address in a VPC: false
+==> gs-rest-service:  -- VPC tenancy specification: default
+==> gs-rest-service: Warning! Vagrant might not be able to SSH into the instance.
+==> gs-rest-service: Please check your security groups settings.
+There was an error talking to AWS. The error message is shown
+below:
+
+InvalidParameterValue => Value () for parameter groupId is invalid. The value cannot be empty
+----
+
+=== Solution
+
+----
+$ cat ~/.aws/config
+[default]
+region = us-east-1
+output = json
+----
+
+----
+$ git apply <<'EOF'
+diff --git a/Vagrantfile b/Vagrantfile
+index d8f0f4f..86c3923 100644
+--- a/Vagrantfile
++++ b/Vagrantfile
+@@ -37,8 +37,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+     aws.access_key_id = ENV['ACCESS_KEY_ID']
+     aws.secret_access_key = ENV['SECRET_ACCESS_KEY']
+     aws.keypair_name = 'vagrant'
+-    aws.region = 'eu-central-1'
+-    aws.ami = 'ami-7c412f13'
++    aws.region = 'us-east-1'
++    aws.ami = 'ami-0739f8cdb239fe9ae'
+     aws.security_groups = ['vagrant']
+     aws.instance_type = 't2.micro'
+EOF
+----
+
+=== References
+
+. https://cursos.alura.com.br/forum/topico-value-for-parameter-groupid-is-invalid-the-value-cannot-be-empty-57936
+. https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#LaunchInstanceWizard:
+
+== Problem 1 - "`call': undefined method `except' for #<Hash:"
+
+----
+$ vagrant up
+Traceback (most recent call last):
+	25: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/bin/vagrant:205:in `<main>'
+	24: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/environment.rb:290:in `cli'
+	23: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/cli.rb:67:in `execute'
+	22: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/plugins/commands/up/command.rb:87:in `execute'
+	21: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/plugin/v2/command.rb:186:in `with_target_vms'
+	20: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/plugin/v2/command.rb:186:in `each'
+	19: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/plugin/v2/command.rb:204:in `block in with_target_vms'
+	18: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/plugin/v2/command.rb:180:in `block in with_target_vms'
+	17: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/environment.rb:715:in `machine'
+	16: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/vagrantfile.rb:81:in `machine'
+	15: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/vagrantfile.rb:81:in `new'
+	14: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:154:in `initialize'
+	13: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:541:in `state'
+	12: from /Users/pj/.vagrant.d/gems/2.6.6/gems/vagrant-aws-0.7.2/lib/vagrant-aws/provider.rb:32:in `state'
+	11: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:201:in `action'
+	10: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:197:in `block in action'
+	 9: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:215:in `block in action'
+	 8: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/machine.rb:246:in `action_raw'
+	 7: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/runner.rb:89:in `run'
+	 6: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/util/busy.rb:19:in `busy'
+	 5: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/runner.rb:89:in `block in run'
+	 4: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/builder.rb:149:in `call'
+	 3: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/warden.rb:48:in `call'
+	 2: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/builtin/config_validate.rb:25:in `call'
+	 1: from /opt/vagrant/embedded/gems/2.2.14/gems/vagrant-2.2.14/lib/vagrant/action/warden.rb:48:in `call'
+/Users/pj/.vagrant.d/gems/2.6.6/gems/vagrant-aws-0.7.2/lib/vagrant-aws/action/connect_aws.rb:41:in `call': undefined method `except' for #<Hash:0x00007fc903b08af0> (NoMethodError)
+----
+
+----
+$ vagrant -v
+Vagrant 2.2.14
+----
+
+=== Solution
+
+----
+$ git apply <<'EOF'
+diff --git a/Vagrantfile b/Vagrantfile
+index d5eb92e..d8f0f4f 100644
+--- a/Vagrantfile
++++ b/Vagrantfile
+@@ -6,6 +6,17 @@ Vagrant.require_version '>= 1.6.0'
+ VAGRANTFILE_API_VERSION = '2'
+ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'aws'
+
++class Hash
++  def slice(*keep_keys)
++    h = {}
++    keep_keys.each { |key| h[key] = fetch(key) if has_key?(key) }
++    h
++  end unless Hash.method_defined?(:slice)
++  def except(*less_keys)
++    slice(*keys - less_keys)
++  end unless Hash.method_defined?(:except)
++end
++
+ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+   if Vagrant.has_plugin?("vagrant-vbguest")
+     config.vbguest.auto_update = false
+EOF
+
+$ git add Vagrantfile
+----
+
+=== References
+
+. https://github.com/mitchellh/vagrant-aws/issues/566

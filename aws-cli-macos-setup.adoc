@@ -1,0 +1,45 @@
+= AWS CLI macOS setup
+:icons: font
+:nofooter:
+
+Installing:
+
+----
+$ brew install awscli
+----
+
+----
+$ aws configure
+AWS Access Key ID [None]: XXXXXXXXXXXX
+AWS Secret Access Key [None]: XXXXXXXXXXXXXXXXXXX
+Default region name [None]: us-east-1
+Default output format [None]: json
+----
+
+NOTE: Inside Brazil, you may want to set the "Default region name" to
+"sa-east-1".
+
+Generated files:
+
+----
+$ ls -l ~/.aws
+total 16
+-rw-------  1 pj  staff   43 Feb 13 16:35 config
+-rw-------  1 pj  staff  116 Feb 13 16:35 credentials
+
+$ cat ~/.aws/config
+[default]
+region = us-east-1
+output = json
+----
+
+Testing:
+
+----
+$ aws pricing get-attribute-values --service-code AmazonEC2 --attribute-name instanceType
+----
+
+References:
+
+. https://console.aws.amazon.com/iam/home?#/security_credentials
+. https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html

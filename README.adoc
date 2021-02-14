@@ -3,32 +3,88 @@ Paulo Jerônimo <paulojeronimo@gmail.com>; {localdatetime}
 :icons: font
 :toc:
 :numbered:
+:nofooter:
+
+== Prerequisites
+
+. <<aws-cli-macos-setup#,Install aws cli (macOS setup)>>.
+. https://github.com/mitchellh/vagrant-aws[Install vagrant-aws plugin^].
 
 == Creation
 
-Create some files and do initial configurations with the following command:
+Create some files and do initial configurations with the following
+command:
 
 ----
-./create
+$ ./create
 ----
 
-Source link:aws-variables[] before using any of the following vagrant commands.
+Source link:aws-variables[] before using any of the following vagrant
+commands.
 
 ----
-source aws-variables
+$ source aws-variables
 ----
 
-Execute the following command to start vagrant provision and wait for this process finishes.
+Type the following if you want to see if the variables were correctly
+configured:
 
 ----
-vagrant up
+$ echo $ACCESS_KEY_ID
+$ echo $SECRET_ACCESS_KEY
+----
+
+Execute the following commands to start vagrant provision and wait for
+this process finishes.
+
+----
+$ vagrant box add aws-dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+
+$ vagrant up
+----
+
+Expected output:
+
+----
+Bringing machine 'gs-rest-service' up with 'aws' provider...
+==> gs-rest-service: Warning! The AWS provider doesn't support any of the Vagrant
+==> gs-rest-service: high-level network configurations (`config.vm.network`). They
+==> gs-rest-service: will be silently ignored.
+==> gs-rest-service: Launching an instance with the following settings...
+==> gs-rest-service:  -- Type: t2.micro
+==> gs-rest-service:  -- AMI: ami-0739f8cdb239fe9ae
+==> gs-rest-service:  -- Region: us-east-1
+==> gs-rest-service:  -- Keypair: vagrant
+==> gs-rest-service:  -- Security Groups: ["vagrant"]
+==> gs-rest-service:  -- Block Device Mapping: []
+==> gs-rest-service:  -- Terminate On Shutdown: false
+==> gs-rest-service:  -- Monitoring: false
+==> gs-rest-service:  -- EBS optimized: false
+==> gs-rest-service:  -- Source Destination check:
+==> gs-rest-service:  -- Assigning a public IP address in a VPC: false
+==> gs-rest-service:  -- VPC tenancy specification: default
+==> gs-rest-service: Waiting for instance to become "ready"...
+==> gs-rest-service: Waiting for SSH to become available...
+==> gs-rest-service: Machine is booted and ready for use!
+==> gs-rest-service: Running provisioner: shell...
+    gs-rest-service: Running: inline script
+    gs-rest-service: Cloning into 'provision-scripts'...
+    gs-rest-service: Loading configuration file /home/ubuntu/provision-scripts/config.sample ...
+    gs-rest-service: Provision pipeline "install" started by ubuntu at /home/ubuntu/provision-scripts ...
+    gs-rest-service: Updating packages cache ...
+    gs-rest-service: Installing utility packages ...
+    gs-rest-service: Installing dotfiles (https://github.com/paulojeronimo/dotfiles) into /home/ubuntu ...
+    gs-rest-service: Provision finishes with success!
 ----
 
 == Information
 
 ----
-./aws-ip-address
-./aws-dns-name
+$ ./aws-ip-address
+34.207.190.179
+
+$ ./aws-dns-name
+ec2-34-207-190-179.compute-1.amazonaws.com
 ----
 
 == Access
@@ -36,13 +92,13 @@ vagrant up
 Using vagrant:
 
 ----
-vagrant ssh
+$ vagrant ssh
 ----
 
 Using ssh:
 
 ----
-ssh -i vagrant.pem ubuntu@$(./aws-ip-address)
+$ ssh -i vagrant.pem ubuntu@$(./aws-ip-address)
 ----
 
 == Removal
@@ -50,23 +106,29 @@ ssh -i vagrant.pem ubuntu@$(./aws-ip-address)
 Use vagrant to destroy the vm:
 
 ----
-vagrant destroy
+$ vagrant destroy
 ----
 
 Wait until machine is destroyed (check the status using the following command):
 
 ----
-vagrant status
+$ vagrant status
+----
+
+=== Optional steps
+
+Remove configurations maded in aws and the local generated files:
+
+----
+$ ./remove
 ----
 
 Remove the dummy box:
 
 ----
-vagrant box remove aws-dummy
+$ vagrant box remove aws-dummy
 ----
 
-Remove configurations maded in aws and the local generated files:
+== Problems and Solutions
 
-----
-./remove
-----
+<<problems-and-solutions#,Read this>>.
